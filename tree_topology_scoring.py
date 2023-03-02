@@ -2,7 +2,7 @@
 #cleaned-up code
 import os, sys, getopt
 import dendropy
-import pandas as pd
+#import pandas as pd
 
 sys.setrecursionlimit(550000) #for dendropy rerooting process (recursion search limit)
 
@@ -119,15 +119,26 @@ def show_help():
     print('[options][load path]')
     print('-h, show_help')
     print('-v, show_version')
-    print('-----input reference tree to be scored---------')
+    print('-----input a reference tree to be scored---------')
     print('-r [path], path of reference tree to be scored')
     #print('-t, print trend of confidence score, and skip tree print')
     print('-n, normalize (count / a number of subtrees) annotation score, e.g., consensus_cnt, jmi_cnt')
+    
+    print("# configurations")
     print('to use without -r, add reference tree at the end of the trees file(input)')
     print('-R [str], reroot using one or more items; string delimited using a comma (e.g., item1,item2 = [item1, item2])')
+    print('\tUse "," (comma) as a delimiter to input more than one OTUs ("OTU1,OTU2" -> OTU1, OTU2)')
+    print('\tGiven more than one OTUs will be rerooted by their most common recent ancestor node')          
     print('-m [str], a name for annotation label in an output tree')
-    print('-f [str], input tree format e.g., default=newick, nexus')
-    print('support only STDOUT')
+    print('-f [str], input tree format that are supported by Dendropy (default: newick)')
+    print("\tNewick")
+    print("\tNexus")
+
+    print("")
+    print('# Default branch scoring types')
+    print('\tH1: shared branching between trees of identical OTUs (e.g., consensus)')
+    print('\tH2: shared branching between trees of partially shared OTUs (e.g., Jack-Knife Monophyly Indexing; JMI)')
+
 
     sys.exit()
     
@@ -138,6 +149,7 @@ def show_version():
     print("\t2. partially sharing same OTUs or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
     print("then output a tree with branching score, in nexus format")
     print("#utilizing dendropy")
+
     sys.exit()
 
 
@@ -146,9 +158,8 @@ if __name__=="__main__":
     #process
     '''
     1. collect trees from argument or file path
-    0. (optional) remove any non_taxon related string from newick
-    2. collect brick(component) of trees, and count
-    3. remove any non_taxon related string from reference newick to place scores
+    2. keep operational taxon units (OTUs) that are shared between two trees for comparison 
+    3. score branching to a given reference tree [-r]
     '''
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hvr:naR:L:f:')
@@ -157,7 +168,7 @@ if __name__=="__main__":
         show_help()
 
     ref_tree_path=''
-    save_folder_path=''
+    #save_folder_path=''
     normalize_score_flag=False
 
     reroot_clade_list=[] #can be one or more than two items to set as an outgroup (reroot)
@@ -261,10 +272,10 @@ if __name__=="__main__":
                 if (pre_annotation_label==""): #use predefined annotation label if not given
 
                     if (exclude_taxon_list==[]):
-                        annotation_label="consensus_cnt" #compare between trees of shared OTUs (e.g., consensus)
+                        annotation_label="H1" #compare topology of trees of all shared OTUs (e.g., consensus)
 
                     else:
-                        annotation_label="jmi_cnt" #compare between trees of unshared OTUs (e.g., Jack-knife monophyly indexing)
+                        annotation_label="H2" #compare topology between trees of partially shared OTUs (e.g., Jack-knife monophyly indexing)
 
                 else:
                     annotation_label = pre_annotation_label
@@ -292,5 +303,5 @@ if __name__=="__main__":
                         inner_node.annotations[annotation_label]._value=float(inner_node.annotations[annotation_label]._value) / float(len(comp_treelist_ob)) #begining from 0 or 1(self)
 
 
-        #print((ref_tree_ob.as_string("newick"))) #cannot fully/property show (multiple) metadata
+        #print((ref_tree_ob.as_string(schema=tree_format))) #cannot fully/property show (multiple) metadata using newick
         print((ref_tree_ob.as_string(schema="nexus")))
