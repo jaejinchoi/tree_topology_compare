@@ -1,7 +1,7 @@
 ### Tree_topology_compare  
 
 ### Purpose
-Compare tree topologies and score shared branching. When comparing tree topology or branching most available tools score "concensus" between trees of identical operational taxon units (OTUs). In addition to determine consensus, this script can also score branching of partially shared OTUs, e.g., Jack-knife Monopyly Indexing (JMI), to determine the impact of OTU sampling in tree topology.
+Compare tree topologies and score shared branching. When comparing tree topology or branching most available tools score "concensus" between trees of identical operational taxon units (OTUs). In addition to determine consensus, this script can also score branching between trees of partially shared OTUs, e.g., Jack-knife Monopyly Indexing (JMI), to determine the impact of OTU sampling in tree topology.
 
 ### Process
 1. Collect trees (tree file format supported by Dendropy, e.g., Newick or Nexus) from given file paths and as an argument.
@@ -13,7 +13,7 @@ Compare tree topologies and score shared branching. When comparing tree topology
 
   
 ### Requirements
-* Dendropy (4.5.2)
+* Dendropy (4.5.2)  
 * Python3
 Lower version of libraries or packages may also support this script but not tested. 
 
