@@ -1,5 +1,4 @@
 #python3
-#cleaned-up code
 import os, sys, getopt
 import dendropy
 #import pandas as pd
@@ -115,10 +114,9 @@ class dendro_comp:
 
 
 def show_help():
-
     print('[options][load path]')
     print('-h, show_help')
-    print('-v, show_version')
+    print('-v, show_description')
     print('-----input a reference tree to be scored---------')
     print('-r [path], path of reference tree to be scored')
     #print('-t, print trend of confidence score, and skip tree print')
@@ -138,18 +136,19 @@ def show_help():
     print('# Default branch scoring types')
     print('\tH1: shared branching between trees of identical OTUs (e.g., consensus)')
     print('\tH2: shared branching between trees of partially shared OTUs (e.g., Jack-Knife Monophyly Indexing; JMI)')
-
-
+    
+    print("")
+    print("Output a tree with branching score, in nexus format")
+    
     sys.exit()
     
 
-def show_version():
-    print("Compare tree brachning between")
+def show_description():
+    print("Compare tree branching between trees of")
     print("\t1. sharing exactly same OTUs or leaves (e.g., consensus)")
     print("\t2. partially sharing same OTUs or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
-    print("then output a tree with branching score, in nexus format")
-    print("#utilizing dendropy")
-
+    print("")
+    print("Code by JaeJin Choi. March 6, 2023")
     sys.exit()
 
 
