@@ -107,9 +107,9 @@ class dendro_comp:
             if (inner_node.annotations.find(name=annotation_label)==None):
                 inner_node.annotations[annotation_label]._value=annotation_score_base #begining from 0 or 1(self)
 
-            if (child_taxon_tile not in comp_tile_dict): #for any subtrees (inner nodes)
-                #inner_node.annotations[annotation_label]._value+=1 #additive
-                inner_node.annotations[annotation_label]._value-=1 #substractive
+            if (child_taxon_tile in comp_tile_dict): #for any subtrees (inner nodes)
+                inner_node.annotations[annotation_label]._value+=1 #additive
+                #inner_node.annotations[annotation_label]._value-=1 #substractive
                 #print(inner_node.annotations[annotation_label]._value)
 
 
@@ -279,8 +279,6 @@ if __name__=="__main__":
 
                 else:
                     annotation_label = pre_annotation_label
-
-                annotation_score_base=len(comp_treelist_ob)
 
                 comp_tile_dict = dendro_comp().subtree_component_tile_dict(
                     tree_ob=comp_tree_ob
