@@ -143,7 +143,7 @@ def show_help():
     sys.exit()
     
 
-def show_description():
+def show_version():
     print("Compare tree branching between trees of")
     print("\t1. sharing exactly same OTUs or leaves (e.g., consensus)")
     print("\t2. partially sharing same OTUs or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
@@ -172,6 +172,7 @@ if __name__=="__main__":
 
     reroot_clade_list=[] #can be one or more than two items to set as an outgroup (reroot)
     tree_format="newick"
+    pre_annotation_label=""
 
     for opt, arg in opts:
 
