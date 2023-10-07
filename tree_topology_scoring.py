@@ -29,9 +29,10 @@ class dendro_comp:
             sub_tree.update_bipartitions() #ncessary per function process
 
             subtree_taxon_list = dendro_comp().collect_taxon_list(tree_ob=sub_tree, exclude_taxon_list=exclude_taxon_list)
-            subtree_taxon_tile = ":".join(subtree_taxon_list)
+            subtree_taxon_tile = ":".join(subtree_taxon_list).strip()
 
-            if (subtree_taxon_tile not in subtree_tile_dict): #avoid duplicate tile despite actual subtree string may be unique
+            #avoid end-resulting duplicated tiles and empty tiles
+            if (subtree_taxon_tile!="" and subtree_taxon_tile not in subtree_tile_dict): 
                 #subtree_tile_dict[subtree_taxon_tile]=sub_tree.as_newick_string()
                 subtree_tile_dict[subtree_taxon_tile]=sub_tree.as_string("newick")
 
@@ -108,10 +109,10 @@ class dendro_comp:
                 inner_node.annotations[annotation_label]._value=annotation_score_base #begining from 0 or 1(self)
 
             if (child_taxon_tile in comp_tile_dict): #for any subtrees (inner nodes)
+                #print(child_taxon_tile)
                 inner_node.annotations[annotation_label]._value+=1 #additive
-                #inner_node.annotations[annotation_label]._value-=1 #substractive
                 #print(inner_node.annotations[annotation_label]._value)
-
+                
 
 def show_help():
     print('[options][load path]')
@@ -138,7 +139,7 @@ def show_help():
     print('\tH2: shared branching between trees of partially shared OTUs (e.g., Jack-Knife Monophyly Indexing; JMI)')
     
     print("")
-    print("Output a tree with branching score, in nexus format")
+    print("-o [path], save a copy of (Nexus) reference tree with branch scores as a file, or standard output as default")
     
     sys.exit()
     
@@ -148,7 +149,7 @@ def show_version():
     print("\t1. sharing exactly same OTUs or leaves (e.g., consensus)")
     print("\t2. partially sharing same OTUs or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
     print("")
-    print("Code by JaeJin Choi. March 6, 2023")
+    print("Code by JaeJin Choi. March 6, 2023-")
     sys.exit()
 
 
@@ -161,7 +162,7 @@ if __name__=="__main__":
     3. score branching to a given reference tree [-r]
     '''
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hvr:naR:L:f:')
+        opts, args = getopt.getopt(sys.argv[1:], 'hvr:naR:L:f:o:')
 
     except:
         show_help()
@@ -173,6 +174,7 @@ if __name__=="__main__":
     reroot_clade_list=[] #can be one or more than two items to set as an outgroup (reroot)
     tree_format="newick"
     pre_annotation_label=""
+    save_path = f"{os.getcwd()}/compared_tree.result"
 
     for opt, arg in opts:
 
@@ -196,6 +198,9 @@ if __name__=="__main__":
 
         elif (opt=='-R'): #rerooting
             reroot_clade_list = str(arg).split(',')
+
+        elif (opt=='-o'): #rerooting
+            save_path = os.path.abspath(arg)
 
         else:
             print("undefined argument or flag: %s" % (opt))
@@ -268,6 +273,8 @@ if __name__=="__main__":
                 ## exclude_taxon_list; not shared by reference and compared trees; union(A,B) - intersection(A,B)
                 exclude_taxon_list = list(set(ref_taxon_list).symmetric_difference(set(comp_taxon_list)))
 
+                print(f"# Shared taxon between REF and COMP trees | intersection : union = {len(set(ref_taxon_list) & set(comp_taxon_list))} : {len(set(ref_taxon_list) | set(comp_taxon_list))}")
+
                 ## a name of annotation/metadata
                 if (pre_annotation_label==""): #use predefined annotation label if not given
 
@@ -301,5 +308,10 @@ if __name__=="__main__":
                         inner_node.annotations[annotation_label]._value=float(inner_node.annotations[annotation_label]._value) / float(len(comp_treelist_ob)) #begining from 0 or 1(self)
 
 
-        #print((ref_tree_ob.as_string(schema=tree_format))) #cannot fully/property show (multiple) metadata using newick
-        print((ref_tree_ob.as_string(schema="nexus")))
+        if (save_path!=""):
+            with open(save_path, 'w') as write_f:
+                write_f.write(ref_tree_ob.as_string(schema="nexus"))
+        
+        else:
+            #print((ref_tree_ob.as_string(schema=tree_format))) #cannot fully/property show (multiple) metadata using newick
+            print((ref_tree_ob.as_string(schema="nexus")))
