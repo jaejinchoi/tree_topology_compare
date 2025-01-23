@@ -257,7 +257,6 @@ if __name__=="__main__":
 
             for comp_tree_ob in comp_treelist_ob:
                 #print(len(comp_treelist_ob))
-                #sys.exit()
 
                 dendro_comp().reroot_tree(
                     tree=comp_tree_ob
