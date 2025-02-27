@@ -158,7 +158,7 @@ if __name__=="__main__":
     #process
     '''
     1. collect trees from argument or file path
-    2. keep operational taxon units (OTUs) that are shared between two trees for comparison 
+    2. keep taxons that are shared between two trees for comparison 
     3. score branching to a given reference tree [-r]
     '''
     try:
