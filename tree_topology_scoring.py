@@ -24,9 +24,10 @@ class dendro_comp:
                 #, suppress_unifurcation=False
             ) #shallow copy (whole tree)?
 
+            inner_node = None #to suppress warning message, "New seed_node has parent_node"
             sub_tree.seed_node = inner_node #designate root
-            sub_tree.seed_node.parent_node = None
-            sub_tree.update_bipartitions() #ncessary per function process
+            #sub_tree.seed_node.parent_node = None
+            sub_tree.update_bipartitions() #necessary per function process
 
             subtree_taxon_list = dendro_comp().collect_taxon_list(tree_ob=sub_tree, exclude_taxon_list=exclude_taxon_list)
             subtree_taxon_tile = ":".join(subtree_taxon_list).strip()
