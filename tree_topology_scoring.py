@@ -24,9 +24,7 @@ class dendro_comp:
                 #, suppress_unifurcation=False
             ) #shallow copy (whole tree)?
 
-            inner_node = None #to suppress warning message, "New seed_node has parent_node"
-            sub_tree.seed_node = inner_node #designate root
-            #sub_tree.seed_node.parent_node = None
+            sub_tree.seed_node.parent_node = None #new seed_node with the parent_node is None
             sub_tree.update_bipartitions() #necessary per function process
 
             subtree_taxon_list = dendro_comp().collect_taxon_list(tree_ob=sub_tree, exclude_taxon_list=exclude_taxon_list)
@@ -127,7 +125,7 @@ def show_help():
     print("# configurations")
     print('to use without -r, add reference tree at the end of the trees file(input)')
     print('-R [str], reroot using one or more items; string delimited using a comma (e.g., item1,item2 = [item1, item2])')
-    print('\tUse "," (comma) as a delimiter to input more than one OTUs ("OTU1,OTU2" -> OTU1, OTU2)')
+    print('\tUse "," (comma) as a delimiter to input more than one OTUs ("Taxon1,Taxon2" -> [Taxon1, Taxon2]')
     print('\tGiven more than one OTUs will be rerooted by their most common recent ancestor node')          
     print('-m [str], a name for annotation label in an output tree')
     print('-f [str], input tree format that are supported by Dendropy (default: newick)')
@@ -147,8 +145,8 @@ def show_help():
 
 def show_version():
     print("Compare tree branching between trees of")
-    print("\t1. sharing exactly same OTUs or leaves (e.g., consensus)")
-    print("\t2. partially sharing same OTUs or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
+    print("\t1. sharing exactly same taxons or leaves (e.g., consensus)")
+    print("\t2. partially sharing same taxons or leaves (e.g., Jack-knife Monophyly Indexing or JMI)")
     print("")
     print("Code by JaeJin Choi. March 6, 2023-")
     sys.exit()
@@ -255,10 +253,10 @@ if __name__=="__main__":
         for comp_tree_path in load_path_list:
             ## https://dendropy.org/primer/treecollections.html
             comp_treelist_ob = dendropy.TreeList.get(path=comp_tree_path, schema=tree_format) #read multiple trees
+            #print(len(comp_treelist_ob))
 
             for comp_tree_ob in comp_treelist_ob:
-                #print(len(comp_treelist_ob))
-
+            
                 dendro_comp().reroot_tree(
                     tree=comp_tree_ob
                     , reroot_clade_list=reroot_clade_list
