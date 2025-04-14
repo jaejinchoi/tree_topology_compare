@@ -24,7 +24,9 @@ class dendro_comp:
                 #, suppress_unifurcation=False
             ) #shallow copy (whole tree)?
 
-            sub_tree.seed_node.parent_node = None #new seed_node with the parent_node is None
+            inner_node.parent_node = None #set the parent_node to None
+            sub_tree.seed_node = inner_node #sub_tree.seed_node is a reference to the original tree
+            #sub_tree.seed_node.parent_node = None #new seed_node with the parent_node is None
             sub_tree.update_bipartitions() #necessary per function process
 
             subtree_taxon_list = dendro_comp().collect_taxon_list(tree_ob=sub_tree, exclude_taxon_list=exclude_taxon_list)
