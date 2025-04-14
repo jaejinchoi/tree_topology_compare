@@ -139,6 +139,7 @@ def show_help():
     
     print("")
     print("-o [path], save a copy of (Nexus) reference tree with branch scores as a file, or standard output as default")
+    print("\tDefault: %s" % (os.path.abspath(os.getcwd())+"/compared_tree.result"))
     
     sys.exit()
     
