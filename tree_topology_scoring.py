@@ -127,8 +127,8 @@ def show_help():
     print("# configurations")
     print('to use without -r, add reference tree at the end of the trees file(input)')
     print('-R [str], reroot using one or more items; string delimited using a comma (e.g., item1,item2 = [item1, item2])')
-    print('\tUse "," (comma) as a delimiter to input more than one OTUs ("Taxon1,Taxon2" -> [Taxon1, Taxon2]')
-    print('\tGiven more than one OTUs will be rerooted by their most common recent ancestor node')          
+    print('\tUse "," (comma) as a delimiter to input more than one taxon ("Taxon1,Taxon2" -> [Taxon1, Taxon2]')
+    print('\tGiven more than one taxon will be rerooted by their most common recent ancestor node')          
     print('-m [str], a name for annotation label in an output tree')
     print('-f [str], input tree format that are supported by Dendropy (default: newick)')
     print("\tNewick")
@@ -136,9 +136,9 @@ def show_help():
 
     print("")
     print('# Default branch scoring types')
-    print('\tH1: shared branching between trees of identical OTUs (e.g., consensus)')
-    print('\tH2: shared branching between trees of partially shared OTUs (e.g., Jack-Knife Monophyly Indexing; JMI)')
-    
+    print('\tH1: shared branching between trees of identical taxons (e.g., consensus)')
+    print('\tH2: shared branching between trees of partially shared taxons (e.g., Jack-Knife Monophyly Indexing; JMI)')
+
     print("")
     print("-o [path], save a copy of (Nexus) reference tree with branch scores as a file, or standard output as default")
     print("\tDefault: %s" % (os.path.abspath(os.getcwd())+"/compared_tree.result"))
@@ -201,7 +201,7 @@ if __name__=="__main__":
         elif (opt=='-R'): #rerooting
             reroot_clade_list = str(arg).split(',')
 
-        elif (opt=='-o'): #rerooting
+        elif (opt=='-o'): #save file path
             save_path = os.path.abspath(arg)
 
         else:
@@ -280,10 +280,10 @@ if __name__=="__main__":
                 if (pre_annotation_label==""): #use predefined annotation label if not given
 
                     if (exclude_taxon_list==[]):
-                        annotation_label="H1" #compare topology of trees of all shared OTUs (e.g., consensus)
+                        annotation_label="H1" #compare topology of trees of all shared taxons (e.g., consensus)
 
                     else:
-                        annotation_label="H2" #compare topology between trees of partially shared OTUs (e.g., Jack-knife monophyly indexing)
+                        annotation_label="H2" #compare topology between trees of partially shared taxons (e.g., Jack-knife monophyly indexing)
 
                 else:
                     annotation_label = pre_annotation_label
