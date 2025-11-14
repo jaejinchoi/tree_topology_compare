@@ -253,10 +253,14 @@ if __name__=="__main__":
             , exclude_taxon_list=[]
             )
 
+        total_comp_tree_cnt=0
+
         for comp_tree_path in load_path_list:
             ## https://dendropy.org/primer/treecollections.html
             comp_treelist_ob = dendropy.TreeList.get(path=comp_tree_path, schema=tree_format) #read multiple trees
             #print(len(comp_treelist_ob))
+
+            total_comp_tree_cnt+=len(comp_treelist_ob)
 
             for comp_tree_ob in comp_treelist_ob:
             
@@ -301,14 +305,17 @@ if __name__=="__main__":
                     , annotation_score_base=annotation_score_base
                     )
 
+        print(f"\nTotal # of subtrees compared N = {total_comp_tree_cnt}, Normalize: {normalize_score_flag}")
 
-            if (normalize_score_flag==True):
-                for inner_node in ref_tree_ob.internal_nodes():
-
-                    if (inner_node.annotations.find(name=annotation_label)!=None):
-                        inner_node.annotations[annotation_label]._value=float(inner_node.annotations[annotation_label]._value) / float(len(comp_treelist_ob)) #begining from 0 or 1(self)
-
-
+        if (normalize_score_flag==True):
+            
+            for inner_node in ref_tree_ob.internal_nodes():
+                if (inner_node.annotations.find(name=annotation_label)!=None):
+                    #inner_node.annotations[annotation_label]._value=float(inner_node.annotations[annotation_label]._value) / float(len(comp_treelist_ob)) #begining from 0 or 1(self)
+                    inner_node.annotations[annotation_label]._value=float(inner_node.annotations[annotation_label]._value) / total_comp_tree_cnt #begining from 0 or 1(self)
+                    #print(inner_node.annotations[annotation_label]._value)
+                        
+                        
         if (save_path!=""):
             with open(save_path, 'w') as write_f:
                 write_f.write(ref_tree_ob.as_string(schema="nexus"))
